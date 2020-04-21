@@ -19,8 +19,9 @@ def preprocess_file_and_create_vocabulary(filename):
     f = open(filename, "rb")
     text = f.read()
     f.close()
-    text = text.decode('ISO-8859-1')
 
+    # find encoding source https: // stackoverflow.com / questions / 31019854 / typeerror - cant - use - a - string - pattern - on - a - bytes - like - object - in -re - findall
+    text = text.decode('ISO-8859-1')
 
     # regex source "https://stackoverflow.com/questions/6202549/word-tokenization-using-python-regular-expressions"
     # words = re.findall("[A-Z\-\']{2,}(?![a-z])|[A-Z\-\'][a-z\-\']+(?=[A-Z])|[\'\w\-]+", lower_text)
@@ -41,11 +42,21 @@ def create_frequency_table(corpus_folder):
         # word_count source https://towardsdatascience.com/very-simple-python-script-for-extracting-most-common-words-from-a-story-1e3570d0b9d0
         for vocabulcary in list_of_vocabs_in_file:
             if vocabulcary in vocab_freq_class_dict:
-                vocab_freq_class_dict[vocabulcary][0] += 1
+                if file_category == 'ham':
+                    vocab_freq_class_dict[vocabulcary][0] += 1
+                else:
+                    vocab_freq_class_dict[vocabulcary][1] += 1
+
             else:
-                vocab_freq_class_dict[vocabulcary] = [1, file_category]
+                if file_category == 'ham':
+                    vocab_freq_class_dict[vocabulcary]=[1,0]
+                else:
+                    vocab_freq_class_dict[vocabulcary]=[0,1]
 
     return vocab_freq_class_dict
+
+def compute_conditional_probability(vocab_freq_class_dict):
+    pass
 
 
 if __name__ == '__main__':
