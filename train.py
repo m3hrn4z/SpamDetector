@@ -1,6 +1,9 @@
 import os
 import re
+import numpy as np
 
+p_ham = 2/5
+p_spam = 3/5
 
 def list_directory_files(directory):
     return [os.path.join(r, file) for r, d, f in os.walk(directory) for file in f]
@@ -80,7 +83,6 @@ def compute_conditional_probability_with_smoothing(vocab_freq_dict, delta):
         freq.append(spam_probability)
     return vocab_freq_dict
 
-
 def generate_model_file(vocab_dict, model_file):
     file1 = open(model_file, "w")
     sorted_key_list = sorted(vocab_dict)
@@ -94,6 +96,31 @@ def generate_model_file(vocab_dict, model_file):
     file1.close()
     return
 
+def classify_emails(corpus_folder, vocab_freq_probability_dict):
+    files_list = list_directory_files(corpus_folder)
+    for file_name in files_list:
+        score_ham = np.log10(p_ham)
+        score_spam = np.log10(p_spam)
+        file_category = extract_file_class_from_its_name(file_name)
+        list_of_vocabs_in_file = preprocess_file_and_create_vocabulary(file_name)
+
+        for vocabulary in list_of_vocabs_in_file:
+            if vocabulary in vocab_freq_probability_dict:
+                score_ham += np.log10(vocab_freq_probability_dict[vocabulary][1])
+                score_spam += np.log10(vocab_freq_probability_dict[vocabulary][3])
+
+        if score_ham >= score_spam:
+            predicted_category = "ham"
+        else:
+            predicted_category = "spam"
+
+        if predicted_category == file_category:
+            prediction_result = "right"
+        else:
+            prediction_result = "wrong"
+
+        print(file_name, predicted_category, score_ham, score_spam, file_category, prediction_result)
+
 
 if __name__ == '__main__':
     delta = 0.5
@@ -103,3 +130,7 @@ if __name__ == '__main__':
 
     print('ham probability = ', p_ham)
     print('spma probability = ', p_spam)
+
+    ############### CLASSIFY TEST SET ################
+
+    classify_emails('test', vocab_freq_probability_dict)
