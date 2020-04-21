@@ -40,20 +40,21 @@ def create_frequency_table(corpus_folder):
         list_of_vocabs_in_file = preprocess_file_and_create_vocabulary(file_name)
 
         # word_count source https://towardsdatascience.com/very-simple-python-script-for-extracting-most-common-words-from-a-story-1e3570d0b9d0
-        for vocabulcary in list_of_vocabs_in_file:
-            if vocabulcary in vocab_freq_class_dict:
+        for vocabulary in list_of_vocabs_in_file:
+            if vocabulary in vocab_freq_class_dict:
                 if file_category == 'ham':
-                    vocab_freq_class_dict[vocabulcary][0] += 1
+                    vocab_freq_class_dict[vocabulary][0] += 1
                 else:
-                    vocab_freq_class_dict[vocabulcary][1] += 1
+                    vocab_freq_class_dict[vocabulary][1] += 1
 
             else:
                 if file_category == 'ham':
-                    vocab_freq_class_dict[vocabulcary]=[1,0]
+                    vocab_freq_class_dict[vocabulary] = [1, 0]
                 else:
-                    vocab_freq_class_dict[vocabulcary]=[0,1]
+                    vocab_freq_class_dict[vocabulary] = [0, 1]
 
     return vocab_freq_class_dict
+
 
 def compute_conditional_probability(vocab_freq_class_dict):
     pass
