@@ -34,32 +34,48 @@ def preprocess_file_and_create_vocabulary(filename):
 
 def create_frequency_table(corpus_folder):
     files_list = list_directory_files(corpus_folder)
-    vocab_freq_class_dict = {}
+    vocab_freq_dict = {}
     for file_name in files_list:
         file_category = extract_file_class_from_its_name(file_name)
         list_of_vocabs_in_file = preprocess_file_and_create_vocabulary(file_name)
 
         # word_count source https://towardsdatascience.com/very-simple-python-script-for-extracting-most-common-words-from-a-story-1e3570d0b9d0
         for vocabulary in list_of_vocabs_in_file:
-            if vocabulary in vocab_freq_class_dict:
+            if vocabulary in vocab_freq_dict:
                 if file_category == 'ham':
-                    vocab_freq_class_dict[vocabulary][0] += 1
+                    vocab_freq_dict[vocabulary][0] += 1
                 else:
-                    vocab_freq_class_dict[vocabulary][1] += 1
+                    vocab_freq_dict[vocabulary][1] += 1
 
             else:
                 if file_category == 'ham':
-                    vocab_freq_class_dict[vocabulary] = [1, 0]
+                    vocab_freq_dict[vocabulary] = [1, 0]
                 else:
-                    vocab_freq_class_dict[vocabulary] = [0, 1]
+                    vocab_freq_dict[vocabulary] = [0, 1]
 
-    return vocab_freq_class_dict
+    return vocab_freq_dict
 
 
-def compute_conditional_probability(vocab_freq_class_dict):
-    pass
+def compute_conditional_probability_with_smoothing(vocab_freq_dict, delta):
+
+    total_ham_count = 0
+    total_spam_count = 0
+
+    for vocab,freq in vocab_freq_dict.items():
+        total_ham_count += freq[0] + delta
+        total_spam_count += freq[1] + delta
+
+    for vocab,freq in vocab_freq_dict.items():
+        ham_probability = (freq[0]+delta)/total_ham_count
+        spam_probability = (freq[1]+delta)/total_spam_count
+        freq.insert(1,ham_probability)
+        freq.append(spam_probability)
+    return vocab_freq_dict
 
 
 if __name__ == '__main__':
-    frequency_table = create_frequency_table('train')
-    print(frequency_table)
+    delta = 0.5
+    vocab_freq_dict = create_frequency_table('train')
+    vocab_freq_probability_dict = compute_conditional_probability_with_smoothing(vocab_freq_dict,delta)
+
+    print(vocab_freq_probability_dict)
