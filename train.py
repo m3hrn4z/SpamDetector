@@ -14,18 +14,39 @@ def extract_file_class_from_its_name(file_name):
 
 
 def preprocess_file_and_create_vocabulary(filename):
+    print(filename)
     f = open(filename, "r")
     text = f.read()
+    f.close()
+
     lower_text = text.lower()
 
     # regex source "https://stackoverflow.com/questions/6202549/word-tokenization-using-python-regular-expressions"
-    words = re.findall("[A-Z\-\']{2,}(?![a-z])|[A-Z\-\'][a-z\-\']+(?=[A-Z])|[\'\w\-]+", lower_text)
+    # words = re.findall("[A-Z\-\']{2,}(?![a-z])|[A-Z\-\'][a-z\-\']+(?=[A-Z])|[\'\w\-]+", lower_text)
+    # words = re.split("[a-zA-Z]+", lower_text)
+    words = re.split('\[\^a-zA-Z\]', lower_text)
+    words_list = words[0].split()
 
-    return words
+    return words_list
+
+
+def create_frequency_table(corpus_folder):
+    files_list = list_directory_files(corpus_folder)
+    vocab_freq_class_dict = {}
+    for file_name in files_list:
+        file_category = extract_file_class_from_its_name(file_name)
+        list_of_vocabs_in_file = preprocess_file_and_create_vocabulary(file_name)
+
+        # word_count source https://towardsdatascience.com/very-simple-python-script-for-extracting-most-common-words-from-a-story-1e3570d0b9d0
+        for vocabulcary in list_of_vocabs_in_file:
+            if vocabulcary in vocab_freq_class_dict:
+                vocab_freq_class_dict[vocabulcary][0] += 1
+            else:
+                vocab_freq_class_dict[vocabulcary] = [1, file_category]
+
+    return vocab_freq_class_dict
 
 
 if __name__ == '__main__':
-    train_files_list = list_directory_files('train')
-    print(extract_file_class_from_its_name(' test/test-ham-00039.txt'))
-    words = preprocess_file_and_create_vocabulary('train/train-ham-00001.txt')
-    print(words)
+    frequency_table = create_frequency_table('train')
+    print(frequency_table)
