@@ -1,5 +1,6 @@
 import os
 import re
+import email
 
 
 def list_directory_files(directory):
@@ -15,16 +16,16 @@ def extract_file_class_from_its_name(file_name):
 
 def preprocess_file_and_create_vocabulary(filename):
     print(filename)
-    f = open(filename, "r")
+    f = open(filename, "rb")
     text = f.read()
     f.close()
+    text = text.decode('ISO-8859-1')
 
-    lower_text = text.lower()
 
     # regex source "https://stackoverflow.com/questions/6202549/word-tokenization-using-python-regular-expressions"
     # words = re.findall("[A-Z\-\']{2,}(?![a-z])|[A-Z\-\'][a-z\-\']+(?=[A-Z])|[\'\w\-]+", lower_text)
     # words = re.split("[a-zA-Z]+", lower_text)
-    words = re.split('\[\^a-zA-Z\]', lower_text)
+    words = re.split('\[\^a-zA-Z\]', text)
     words_list = words[0].split()
 
     return words_list
