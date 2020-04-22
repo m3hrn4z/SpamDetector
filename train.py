@@ -141,7 +141,7 @@ if __name__ == '__main__':
     delta = 0.5
     vocab_freq_dict, p_ham, p_spam = create_frequency_table('train')
     vocab_freq_probability_dict = compute_conditional_probability_with_smoothing(vocab_freq_dict, delta)
-    generate_model_file(vocab_freq_probability_dict, 'model.txt')
+    #generate_model_file(vocab_freq_probability_dict, 'model.txt')
 
     print('ham probability = ', p_ham)
     print('spam probability = ', p_spam)
