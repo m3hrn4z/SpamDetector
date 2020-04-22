@@ -1,9 +1,7 @@
 import os
 import re
-import numpy as np
+import math
 
-p_ham = 2/5
-p_spam = 3/5
 
 def list_directory_files(directory):
     return [os.path.join(r, file) for r, d, f in os.walk(directory) for file in f]
@@ -96,18 +94,20 @@ def generate_model_file(vocab_dict, model_file):
     file1.close()
     return
 
-def classify_emails(corpus_folder, vocab_freq_probability_dict):
+
+def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
     files_list = list_directory_files(corpus_folder)
+    result = []
     for file_name in files_list:
-        score_ham = np.log10(p_ham)
-        score_spam = np.log10(p_spam)
+        score_ham = math.log10(p_ham)
+        score_spam = math.log10(p_spam)
         file_category = extract_file_class_from_its_name(file_name)
         list_of_vocabs_in_file = preprocess_file_and_create_vocabulary(file_name)
 
         for vocabulary in list_of_vocabs_in_file:
             if vocabulary in vocab_freq_probability_dict:
-                score_ham += np.log10(vocab_freq_probability_dict[vocabulary][1])
-                score_spam += np.log10(vocab_freq_probability_dict[vocabulary][3])
+                score_ham += math.log10(vocab_freq_probability_dict[vocabulary][1])
+                score_spam += math.log10(vocab_freq_probability_dict[vocabulary][3])
 
         if score_ham >= score_spam:
             predicted_category = "ham"
@@ -119,7 +119,22 @@ def classify_emails(corpus_folder, vocab_freq_probability_dict):
         else:
             prediction_result = "wrong"
 
-        print(file_name, predicted_category, score_ham, score_spam, file_category, prediction_result)
+        result.append([file_name, predicted_category, score_ham, score_spam, file_category, prediction_result])
+        #print(file_name, predicted_category, score_ham, score_spam, file_category, prediction_result)
+    return result
+
+def generate_result_file(result, result_file):
+    file1 = open(result_file, "w")
+    #sorted_key_list = sorted(vocab_dict)
+    line_counter = 0
+    for file_name, predicted_category, score_ham, score_spam, file_category, prediction_result  in result:
+        line_counter += 1
+        line_string = '%i  %s  %s  %f  %f  %s  %s\n' % (line_counter, file_name, predicted_category,
+                                                    score_ham, score_spam,
+                                                    file_category, prediction_result)
+        file1.write(line_string)
+    file1.close()
+    return
 
 
 if __name__ == '__main__':
@@ -129,8 +144,9 @@ if __name__ == '__main__':
     generate_model_file(vocab_freq_probability_dict, 'model.txt')
 
     print('ham probability = ', p_ham)
-    print('spma probability = ', p_spam)
+    print('spam probability = ', p_spam)
 
     ############### CLASSIFY TEST SET ################
 
-    classify_emails('test', vocab_freq_probability_dict)
+    result = classify_emails('test', vocab_freq_probability_dict, p_ham, p_spam)
+    generate_result_file(result, 'result.txt')
