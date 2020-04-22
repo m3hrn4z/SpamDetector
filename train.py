@@ -22,10 +22,9 @@ def preprocess_file_and_create_vocabulary(filename):
     # find encoding source https: // stackoverflow.com / questions / 31019854 / typeerror - cant - use - a - string - pattern - on - a - bytes - like - object - in -re - findall
     text = text.decode('ISO-8859-1')
 
-    words = re.split('\[\^a-zA-Z\]', text)
-    words_list = words[0].split()
+    words = re.split('[^a-zA-Z]', text)
 
-    return words_list
+    return words
 
 
 def create_frequency_table(corpus_folder):
@@ -81,6 +80,7 @@ def compute_conditional_probability_with_smoothing(vocab_freq_dict, delta):
         freq.append(spam_probability)
     return vocab_freq_dict
 
+
 def generate_model_file(vocab_dict, model_file):
     file1 = open(model_file, "w")
     sorted_key_list = sorted(vocab_dict)
@@ -120,18 +120,19 @@ def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
             prediction_result = "wrong"
 
         result.append([file_name, predicted_category, score_ham, score_spam, file_category, prediction_result])
-        #print(file_name, predicted_category, score_ham, score_spam, file_category, prediction_result)
+        # print(file_name, predicted_category, score_ham, score_spam, file_category, prediction_result)
     return result
+
 
 def generate_result_file(result, result_file):
     file1 = open(result_file, "w")
-    #sorted_key_list = sorted(vocab_dict)
+    # sorted_key_list = sorted(vocab_dict)
     line_counter = 0
-    for file_name, predicted_category, score_ham, score_spam, file_category, prediction_result  in result:
+    for file_name, predicted_category, score_ham, score_spam, file_category, prediction_result in result:
         line_counter += 1
         line_string = '%i  %s  %s  %f  %f  %s  %s\n' % (line_counter, file_name, predicted_category,
-                                                    score_ham, score_spam,
-                                                    file_category, prediction_result)
+                                                        score_ham, score_spam,
+                                                        file_category, prediction_result)
         file1.write(line_string)
     file1.close()
     return
@@ -141,7 +142,7 @@ if __name__ == '__main__':
     delta = 0.5
     vocab_freq_dict, p_ham, p_spam = create_frequency_table('train')
     vocab_freq_probability_dict = compute_conditional_probability_with_smoothing(vocab_freq_dict, delta)
-    #generate_model_file(vocab_freq_probability_dict, 'model.txt')
+    generate_model_file(vocab_freq_probability_dict, 'model.txt')
 
     print('ham probability = ', p_ham)
     print('spam probability = ', p_spam)
