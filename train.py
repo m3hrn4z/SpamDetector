@@ -87,9 +87,9 @@ def generate_model_file(vocab_dict, model_file):
     line_counter = 0
     for vocab in sorted_key_list:
         line_counter += 1
-        line_string = '%i  %s  %i  %f  %i  %f\n' % (line_counter, vocab, vocab_dict[vocab][0],
-                                                    vocab_dict[vocab][1], vocab_dict[vocab][2],
-                                                    vocab_dict[vocab][3])
+        line_string = '%i  %s  %i  %s  %i  %s\n' % (line_counter, vocab, vocab_dict[vocab][0],
+                                                    str(vocab_dict[vocab][1]), vocab_dict[vocab][2],
+                                                    str(vocab_dict[vocab][3]))
         file1.write(line_string)
     file1.close()
     return
@@ -127,12 +127,11 @@ def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
 
 def generate_result_file(result, result_file):
     file1 = open(result_file, "w")
-    # sorted_key_list = sorted(vocab_dict)
     line_counter = 0
     for file_name, predicted_category, score_ham, score_spam, file_category, prediction_result in result:
         line_counter += 1
-        line_string = '%i  %s  %s  %f  %f  %s  %s\n' % (line_counter, file_name, predicted_category,
-                                                        score_ham, score_spam,
+        line_string = '%i  %s  %s  %s  %s  %s  %s\n' % (line_counter, file_name, predicted_category,
+                                                        str(score_ham), str(score_spam),
                                                         file_category, prediction_result)
         file1.write(line_string)
     file1.close()
