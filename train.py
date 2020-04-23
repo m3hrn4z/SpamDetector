@@ -119,7 +119,8 @@ def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
         else:
             prediction_result = "wrong"
 
-        result.append([file_name, predicted_category, score_ham, score_spam, file_category, prediction_result])
+        f_name = file_name[file_name.find('\\')+1:]
+        result.append([f_name, predicted_category, score_ham, score_spam, file_category, prediction_result])
         # print(file_name, predicted_category, score_ham, score_spam, file_category, prediction_result)
     return result
 
