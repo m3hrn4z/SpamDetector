@@ -10,20 +10,20 @@
 2. Generated output: 
 <ul>
 <li>
-  <b>model.txt</b> is generated from the provided training set. It basically consist of the vocabulary in each file, frequency and smoothed conditional probability of words for class Ham and class Spam.
+<b>model.txt</b> is generated from the provided training set. It basically consist of the vocabulary in each file, frequency and smoothed conditional probability of words for class Ham and class Spam.
 </li>
 <li>
-  <b>result.txt</b> is generated afer evaluation of model using the given test set. It classifies each file as spam or ham and label it right or wrong based on actual classification.
+<b>result.txt</b> is generated afer evaluation of model using the given test set. It classifies each file as spam or ham and label it right or wrong based on actual classification.
 </li>
 </ul>
 3. Project Report:
 It describes the evaluation metrics like accuracy, precision etc. for the implemented classifier and also lists team information and references followed for the work.
 
-----------------------------------------------------------------------
-## How to run code: 
-To run the implementation, simply run the train.py file using python interpreter. Since, training and testing data is already imported in project. The output is generated in form of two text files model.txt which is generated after training and result.txt which is final output of testing.
 
-To test with another dataset user simply needs to replace the files in test folder and run train.py
+## How to run code: 
+To run the implementation, simply run the <b>train.py</b> file using python interpreter. Since, training and testing data is already imported in project. The output is generated in form of two text files model.txt which is generated after training and result.txt which is final output of testing.
+
+To test with another dataset user simply needs to replace the files in test folder and run train.py.
 
 ### Generating the evaluating results:
 Accuracy, precision, recall and F1-measure are calculated based on the classifications labeled as right or wrong in result.txt. They are further explained in project report.
