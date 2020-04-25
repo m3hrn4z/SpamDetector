@@ -22,7 +22,7 @@ def preprocess_file_and_create_vocabulary(filename):
     # find encoding source https: // stackoverflow.com / questions / 31019854 / typeerror - cant - use - a - string - pattern - on - a - bytes - like - object - in -re - findall
     text = text.decode('ISO-8859-1')
 
-    words = re.split('[^a-zA-Z]', text)
+    words = re.split('[^a-zA-Z]', text.lower())
 
     return words
 
@@ -98,6 +98,10 @@ def generate_model_file(vocab_dict, model_file):
 def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
     files_list = list_directory_files(corpus_folder)
     result = []
+    ham_right = 0
+    ham_wrong = 0
+    spam_right = 0
+    spam_wrong = 0
     for file_name in files_list:
         score_ham = math.log10(p_ham)
         score_spam = math.log10(p_spam)
@@ -116,13 +120,21 @@ def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
 
         if predicted_category == file_category:
             prediction_result = "right"
+            if file_category == "ham":
+                ham_right += 1
+            else:
+                spam_right += 1
         else:
             prediction_result = "wrong"
+            if file_category == "ham":
+                ham_wrong += 1
+            else:
+                spam_wrong += 1
 
         f_name = file_name[file_name.find('\\')+1:]
         result.append([f_name, predicted_category, score_ham, score_spam, file_category, prediction_result])
         # print(file_name, predicted_category, score_ham, score_spam, file_category, prediction_result)
-    return result
+    return result, ham_right, ham_wrong, spam_right, spam_wrong
 
 
 def generate_result_file(result, result_file):
@@ -144,10 +156,32 @@ if __name__ == '__main__':
     vocab_freq_probability_dict = compute_conditional_probability_with_smoothing(vocab_freq_dict, delta)
     generate_model_file(vocab_freq_probability_dict, 'model.txt')
 
-    print('ham probability = ', p_ham)
-    print('spam probability = ', p_spam)
+    #print('ham probability = ', p_ham)
+    #print('spam probability = ', p_spam)
 
     ############### CLASSIFY TEST SET ################
 
-    result = classify_emails('test', vocab_freq_probability_dict, p_ham, p_spam)
+    result, ham_right, ham_wrong, spam_right, spam_wrong = classify_emails('test', vocab_freq_probability_dict, p_ham, p_spam)
     generate_result_file(result, 'result.txt')
+
+    #################### ANALYZE #####################
+    print("******************Class Spam**********************")
+    print("Class Spam:")
+    print("TP: ", spam_right, " / FP: ", spam_wrong, " / FN:", ham_wrong, " / TN: ", ham_right)
+    print("Accuracy: ", (ham_right + spam_right) / (ham_right + ham_wrong + spam_wrong + spam_right))
+    precision = spam_right / (spam_right + spam_wrong)
+    recall = spam_right / (spam_right + ham_wrong)
+    print("Precision: ", precision)
+    print("Recall: ", recall)
+    print("F-measure ", (2 * precision * recall) / (precision + recall))
+
+    print("******************Class Ham**********************")
+    print("TP: ", ham_right, " / FP: ", ham_wrong, " / FN:", spam_wrong, " / TN: ", spam_right)
+    print("Accuracy: ", (ham_right + spam_right)/(ham_right + ham_wrong + spam_wrong + spam_right))
+    precision = ham_right/(ham_right + ham_wrong)
+    recall = ham_right/(ham_right + spam_wrong)
+    print("Precision: ", precision)
+    print("Recall: ", recall)
+    print("F-measure ", (2*precision*recall)/(precision+recall))
+
+
