@@ -165,23 +165,25 @@ if __name__ == '__main__':
     generate_result_file(result, 'result.txt')
 
     #################### ANALYZE #####################
-    print("******************Class Spam**********************")
-    print("Class Spam:")
-    print("TP: ", spam_right, " / FP: ", spam_wrong, " / FN:", ham_wrong, " / TN: ", ham_right)
+    print("******************Class Ham**********************")
+    print("TP: ", ham_right, " | FP: ", spam_wrong, "\nFN: ", ham_wrong, "   | TN: ", spam_right)
     print("Accuracy: ", (ham_right + spam_right) / (ham_right + ham_wrong + spam_wrong + spam_right))
-    precision = spam_right / (spam_right + spam_wrong)
-    recall = spam_right / (spam_right + ham_wrong)
+    precision = ham_right / (ham_right + spam_wrong)
+    recall = ham_right / (ham_right + ham_wrong)
     print("Precision: ", precision)
     print("Recall: ", recall)
     print("F-measure ", (2 * precision * recall) / (precision + recall))
 
-    print("******************Class Ham**********************")
-    print("TP: ", ham_right, " / FP: ", ham_wrong, " / FN:", spam_wrong, " / TN: ", spam_right)
-    print("Accuracy: ", (ham_right + spam_right)/(ham_right + ham_wrong + spam_wrong + spam_right))
-    precision = ham_right/(ham_right + ham_wrong)
-    recall = ham_right/(ham_right + spam_wrong)
+
+    print("******************Class Spam**********************")
+    print("Class Spam:")
+    print("TP: ", spam_right, " | FP: ", ham_wrong, "\nFN:", spam_wrong, "   | TN: ", ham_right)
+    print("Accuracy: ", (ham_right + spam_right) / (ham_right + ham_wrong + spam_wrong + spam_right))
+    precision = spam_right / (spam_right + ham_wrong)
+    recall = spam_right / (spam_right + spam_wrong)
     print("Precision: ", precision)
     print("Recall: ", recall)
-    print("F-measure ", (2*precision*recall)/(precision+recall))
+    print("F-measure ", (2 * precision * recall) / (precision + recall))
+
 
 
