@@ -25,7 +25,7 @@ To run the implementation, simply run the <b>train.py</b> file using python inte
 
 To test with another dataset user simply needs to replace the files in test folder and run train.py.
 
-### Generating the evaluating results:
+### Generating the evaluation results:
 Accuracy, precision, recall and F1-measure are calculated based on the classifications labeled as right or wrong in result.txt. They are further explained in project report.
 
 ----------------------------------------------------------------------
