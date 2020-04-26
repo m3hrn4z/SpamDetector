@@ -185,6 +185,7 @@ if __name__ == '__main__':
     #################### ANALYZE #####################
     
     print("******************Class Ham**********************")
+    print("Class Ham:")
     print("TP: ", ham_right, " | FP: ", spam_wrong, "\nFN: ", ham_wrong, "   | TN: ", spam_right)
     print("Accuracy: ", (ham_right + spam_right) / (ham_right + ham_wrong + spam_wrong + spam_right))
     precision = ham_right / (ham_right + spam_wrong)
