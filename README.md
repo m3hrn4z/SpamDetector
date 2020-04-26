@@ -18,8 +18,10 @@
 </ul>
 3. Project Report:
 It describes the evaluation metrics like accuracy, precision etc. for the implemented classifier and also lists team information and references followed for the work.
+
 4.Folder train:
 It contains the train data set.
+
 5.Folder test:
 It contains the test data set.
 
