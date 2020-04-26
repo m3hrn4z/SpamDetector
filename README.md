@@ -19,9 +19,14 @@
 3. Project Report:
 It describes the evaluation metrics like accuracy, precision etc. for the implemented classifier and also lists team information and references followed for the work.
 
+4.Folder train:
+It contains the train data set.
+
+5.Folder test:
+It contains the test data set.
 
 ## How to run code: 
-To run the implementation, simply run the <b>train.py</b> file using python interpreter. Since, training and testing data is already imported in project. The output is generated in form of two text files model.txt which is generated after training and result.txt which is final output of testing.
+To run the implementation, simply run the <b>train.py</b> file using python interpreter. Training and testing data need to be in train and test folders respectively in the same path of python file so that can be imported in the project. The output is generated in form of two text files model.txt which is generated after training and result.txt which is final output of testing.
 
 To test with another dataset user simply needs to replace the files in test folder and run train.py.
 
