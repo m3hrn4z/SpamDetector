@@ -3,10 +3,12 @@ import re
 import math
 
 
+# returns list of existing files in the input directory
 def list_directory_files(directory):
     return [os.path.join(r, file) for r, d, f in os.walk(directory) for file in f]
 
 
+# returns file category(spam or ham) based on the input name
 def extract_file_class_from_its_name(file_name):
     if (file_name.find('spam') != -1):
         return 'spam'
@@ -14,6 +16,8 @@ def extract_file_class_from_its_name(file_name):
         return 'ham'
 
 
+# reads the input file in binary mode, decode it decode it(bcs some files are not readable in utf-8 format), convert
+# all alphabets to lowercase and split it based on the provided regex
 def preprocess_file_and_create_vocabulary(filename):
     f = open(filename, "rb")
     text = f.read()
@@ -27,6 +31,9 @@ def preprocess_file_and_create_vocabulary(filename):
     return words
 
 
+# calculates required probabilities and provides the frequency table for the input corpus, the data structure for
+# frequency tabla is dictionary where the vocabulary is its key and there is a two element list for value of each key.
+# the first element of list is ham frequency and the 2nd is spam frequency
 def create_frequency_table(corpus_folder):
     files_list = list_directory_files(corpus_folder)
     vocab_freq_dict = {}
@@ -65,6 +72,9 @@ def create_frequency_table(corpus_folder):
     return vocab_freq_dict, p_ham, p_spam
 
 
+# return the conditional probability by applying delta to smooth values, the data structure for returning value is
+# dictionary, where its key are vocabs and the values are 4 element lists for each key. first ham freq, 2nd ham
+# probability, 3rd spam freq, 4th spam probability
 def compute_conditional_probability_with_smoothing(vocab_freq_dict, delta):
     total_ham_count = 0
     total_spam_count = 0
@@ -81,6 +91,7 @@ def compute_conditional_probability_with_smoothing(vocab_freq_dict, delta):
     return vocab_freq_dict
 
 
+#  based on the dictionary structure explained in previous function, here the values are printed in model file
 def generate_model_file(vocab_dict, model_file):
     file1 = open(model_file, "w")
     sorted_key_list = sorted(vocab_dict)
@@ -131,7 +142,7 @@ def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
             else:
                 spam_wrong += 1
 
-        f_name = file_name[file_name.find('\\')+1:]
+        f_name = file_name[file_name.find('\\') + 1:]
         result.append([f_name, predicted_category, score_ham, score_spam, file_category, prediction_result])
         # print(file_name, predicted_category, score_ham, score_spam, file_category, prediction_result)
     return result, ham_right, ham_wrong, spam_right, spam_wrong
@@ -156,12 +167,13 @@ if __name__ == '__main__':
     vocab_freq_probability_dict = compute_conditional_probability_with_smoothing(vocab_freq_dict, delta)
     generate_model_file(vocab_freq_probability_dict, 'model.txt')
 
-    #print('ham probability = ', p_ham)
-    #print('spam probability = ', p_spam)
+    # print('ham probability = ', p_ham)
+    # print('spam probability = ', p_spam)
 
     ############### CLASSIFY TEST SET ################
 
-    result, ham_right, ham_wrong, spam_right, spam_wrong = classify_emails('test', vocab_freq_probability_dict, p_ham, p_spam)
+    result, ham_right, ham_wrong, spam_right, spam_wrong = classify_emails('test', vocab_freq_probability_dict, p_ham,
+                                                                           p_spam)
     generate_result_file(result, 'result.txt')
 
     #################### ANALYZE #####################
@@ -174,7 +186,6 @@ if __name__ == '__main__':
     print("Recall: ", recall)
     print("F-measure ", (2 * precision * recall) / (precision + recall))
 
-
     print("******************Class Spam**********************")
     print("Class Spam:")
     print("TP: ", spam_right, " | FP: ", ham_wrong, "\nFN:", spam_wrong, "   | TN: ", ham_right)
@@ -184,6 +195,3 @@ if __name__ == '__main__':
     print("Precision: ", precision)
     print("Recall: ", recall)
     print("F-measure ", (2 * precision * recall) / (precision + recall))
-
-
-
