@@ -105,7 +105,11 @@ def generate_model_file(vocab_dict, model_file):
     file1.close()
     return
 
-
+# returns the result of classification of test set
+# this function receives the smoothed conditional probability of words as the argument and calculates
+# the score of each class, ham and spam, and predicts the class based on maximum score then compares
+# the predicted class with the actual class to determine that whether the prediction is right or wrong
+# and return the result in a list, it also returns the values required to analyze the model (TP, FP, FN, TN)
 def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
     files_list = list_directory_files(corpus_folder)
     result = []
@@ -147,6 +151,8 @@ def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
     return result, ham_right, ham_wrong, spam_right, spam_wrong
 
 
+#  based on the returned result in function classify_emails which is the result of classification of test set
+#  here the values are printed in result file
 def generate_result_file(result, result_file):
     file1 = open(result_file, "w")
     line_counter = 0
