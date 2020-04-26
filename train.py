@@ -133,7 +133,6 @@ def classify_emails(corpus_folder, vocab_freq_probability_dict, p_ham, p_spam):
 
         f_name = file_name[file_name.find('\\')+1:]
         result.append([f_name, predicted_category, score_ham, score_spam, file_category, prediction_result])
-        # print(file_name, predicted_category, score_ham, score_spam, file_category, prediction_result)
     return result, ham_right, ham_wrong, spam_right, spam_wrong
 
 
@@ -165,6 +164,7 @@ if __name__ == '__main__':
     generate_result_file(result, 'result.txt')
 
     #################### ANALYZE #####################
+    
     print("******************Class Ham**********************")
     print("TP: ", ham_right, " | FP: ", spam_wrong, "\nFN: ", ham_wrong, "   | TN: ", spam_right)
     print("Accuracy: ", (ham_right + spam_right) / (ham_right + ham_wrong + spam_wrong + spam_right))
